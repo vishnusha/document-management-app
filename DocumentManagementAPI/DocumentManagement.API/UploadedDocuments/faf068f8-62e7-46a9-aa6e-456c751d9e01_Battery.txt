@@ -1,0 +1,38 @@
+   "Battery","Location","Product","Vendor","Capacity","Voltage",
+
+
+ //Battery
+                                    _sqlQuery.Append(" SELECT  ");
+                                    _sqlQuery.Append(" cm.hardware_info_id,cm.id,cm.slot,cm.product,cm.vendor,CONCAT(cm.capacity,cm.units) AS capacity,hcc.voltage ");
+                                    _sqlQuery.Append(" FROM auditrun_hw_children_main cm   ");
+                                    _sqlQuery.Append(" LEFT JOIN auditrun_hw_children_configuration hcc on hcc.hw_children_main_id=cm.hw_children_main_id ");
+                                    _sqlQuery.Append(" LEFT JOIN auditrun_hw_children_capabilities hcb on hcb.hw_children_main_id=cm.hw_children_main_id  ");
+                                    _sqlQuery.Append(" where cm.class = 'power'  ");
+                                    _sqlQuery.Append(" and cm.hardware_info_id='" + _hardwareInfoId + "'  ");
+                                    _sqlQuery.Append(" and cm.audit_id='" + _arid + "' ");
+                                    _sqlQuery.Append(" ; ");
+
+ // Fetch system Devices Info rows for this Hardware ID
+                                            var batteryInfoRows = _dataSet.Tables[18].AsEnumerable()
+                                                .Where(r => Convert.ToString(r["hardware_info_id"]) == _hardware_info_id)
+                                                .ToList();
+
+
+    // Battery
+                                                string _battery_id = batteryRows == null ? "-" : (batteryRows?["id"] == DBNull.Value ? "-" : Convert.ToString(batteryRows["id"]));
+                                                string _battery_product = batteryRows == null ? "-" : (batteryRows?["product"] == DBNull.Value ? "-" : Convert.ToString(batteryRows["product"]));
+                                                string _battery_vendor = batteryRows == null ? "-" : (batteryRows?["vendor"] == DBNull.Value ? "-" : Convert.ToString(batteryRows["vendor"]));
+                                                string _battery_slot = batteryRows == null ? "-" : (batteryRows?["slot"] == DBNull.Value ? "-" : Convert.ToString(batteryRows["slot"]));
+                                                string _battery_voltage = batteryRows == null ? "-" : (batteryRows?["voltage"] == DBNull.Value ? "-" : Convert.ToString(batteryRows["voltage"]));
+                                                string _battery_capacity = batteryRows == null ? "-" : (batteryRows?["capacity"] == DBNull.Value ? "-" : Convert.ToString(batteryRows["capacity"]));
+                                                
+
+
+                                                // Battery
+                                                
+                                                worksheet.Cell(rowNumber, 88).Value = _battery_id;
+                                                worksheet.Cell(rowNumber, 89).Value = _battery_slot;
+                                                worksheet.Cell(rowNumber, 90).Value = _battery_product;
+                                                worksheet.Cell(rowNumber, 91).Value = _battery_vendor;
+                                                worksheet.Cell(rowNumber, 92).Value = _battery_capacity;
+                                                worksheet.Cell(rowNumber, 93).Value = _battery_voltage;

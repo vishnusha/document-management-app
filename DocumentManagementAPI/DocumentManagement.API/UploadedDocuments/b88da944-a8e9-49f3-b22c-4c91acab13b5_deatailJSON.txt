@@ -1,0 +1,1183 @@
+{
+  "id" : "exam-node",
+  "class" : "system",
+  "claimed" : true,
+  "handle" : "DMI:0002",
+  "description" : "Notebook",
+  "product" : "HP ProBook 440 G5 (1MJ77AV)",
+  "vendor" : "HP",
+  "serial" : "5CD8122B2P",
+  "width" : 64,
+  "configuration" : {
+    "administrator_password" : "disabled",
+    "boot" : "normal",
+    "chassis" : "notebook",
+    "family" : "103C_5336AN HP ProBook",
+    "frontpanel_password" : "disabled",
+    "keyboard_password" : "disabled",
+    "power-on_password" : "disabled",
+    "sku" : "1MJ77AV",
+    "uuid" : "69eafb5c-a580-9c65-e086-2b88c8918ccb"
+  },
+  "capabilities" : {
+    "smbios-3.1.0" : "SMBIOS version 3.1.0",
+    "dmi-3.1.0" : "DMI version 3.1.0",
+    "smp" : "Symmetric Multi-Processing",
+    "vsyscall32" : "32-bit processes"
+  },
+  "children" : [    {
+      "id" : "core",
+      "class" : "bus",
+      "claimed" : true,
+      "handle" : "DMI:0003",
+      "description" : "Motherboard",
+      "product" : "837B",
+      "vendor" : "HP",
+      "physid" : "0",
+      "version" : "KBC Version 02.2A.00",
+      "serial" : "PGWRH048JAL02O",
+      "children" : [        {
+          "id" : "firmware",
+          "class" : "memory",
+          "claimed" : true,
+          "description" : "BIOS",
+          "vendor" : "HP",
+          "physid" : "1",
+          "version" : "Q85 Ver. 01.02.05",
+          "date" : "03/12/2018",
+          "units" : "bytes",
+          "size" : 65536,
+          "capacity" : 16777216,
+          "capabilities" : {
+            "pci" : "PCI bus",
+            "pcmcia" : "PCMCIA/PCCard",
+            "upgrade" : "BIOS EEPROM can be upgraded",
+            "shadowing" : "BIOS shadowing",
+            "cdboot" : "Booting from CD-ROM/DVD",
+            "bootselect" : "Selectable boot path",
+            "edd" : "Enhanced Disk Drive extensions",
+            "int5printscreen" : "Print Screen key",
+            "int9keyboard" : "i8042 keyboard controller",
+            "int14serial" : "INT14 serial line control",
+            "int17printer" : "INT17 printer control",
+            "acpi" : "ACPI",
+            "usb" : "USB legacy emulation",
+            "smartbattery" : "Smart battery",
+            "biosbootspecification" : "BIOS boot specification",
+            "netboot" : "Function-key initiated network service boot",
+            "uefi" : "UEFI specification is supported"
+          }
+        },
+        {
+          "id" : "memory",
+          "class" : "memory",
+          "claimed" : true,
+          "handle" : "DMI:0007",
+          "description" : "System Memory",
+          "physid" : "7",
+          "slot" : "System board or motherboard",
+          "units" : "bytes",
+          "size" : 8589934592,
+          "children" : [            {
+              "id" : "bank:0",
+              "class" : "memory",
+              "claimed" : true,
+              "handle" : "DMI:0018",
+              "description" : "SODIMM DDR4 Synchronous Unbuffered (Unregistered) 2400 MHz (0.4 ns)",
+              "vendor" : "Unknown - [0x8000]",
+              "physid" : "0",
+              "serial" : "00000876",
+              "slot" : "Bottom-Slot 1(left)",
+              "units" : "bytes",
+              "size" : 8589934592,
+              "width" : 64,
+              "clock" : 2400000000
+            },
+            {
+              "id" : "bank:1",
+              "class" : "memory",
+              "claimed" : true,
+              "handle" : "DMI:0008",
+              "description" : "[empty]",
+              "physid" : "1",
+              "slot" : "Bottom-Slot 2(right)"
+            }]
+        },
+        {
+          "id" : "cache:0",
+          "class" : "memory",
+          "claimed" : true,
+          "handle" : "DMI:000D",
+          "description" : "L1 cache",
+          "physid" : "d",
+          "slot" : "L1 Cache",
+          "units" : "bytes",
+          "size" : 262144,
+          "capacity" : 262144,
+          "configuration" : {
+            "level" : "1"
+          },
+          "capabilities" : {
+            "synchronous" : "Synchronous",
+            "internal" : "Internal",
+            "write-back" : "Write-back",
+            "unified" : "Unified cache"
+          }
+        },
+        {
+          "id" : "cache:1",
+          "class" : "memory",
+          "claimed" : true,
+          "handle" : "DMI:000E",
+          "description" : "L2 cache",
+          "physid" : "e",
+          "slot" : "L2 Cache",
+          "units" : "bytes",
+          "size" : 1048576,
+          "capacity" : 1048576,
+          "configuration" : {
+            "level" : "2"
+          },
+          "capabilities" : {
+            "synchronous" : "Synchronous",
+            "internal" : "Internal",
+            "write-back" : "Write-back",
+            "unified" : "Unified cache"
+          }
+        },
+        {
+          "id" : "cache:2",
+          "class" : "memory",
+          "claimed" : true,
+          "handle" : "DMI:000F",
+          "description" : "L3 cache",
+          "physid" : "f",
+          "slot" : "L3 Cache",
+          "units" : "bytes",
+          "size" : 6291456,
+          "capacity" : 6291456,
+          "configuration" : {
+            "level" : "3"
+          },
+          "capabilities" : {
+            "synchronous" : "Synchronous",
+            "internal" : "Internal",
+            "write-back" : "Write-back",
+            "unified" : "Unified cache"
+          }
+        },
+        {
+          "id" : "cpu",
+          "class" : "processor",
+          "claimed" : true,
+          "handle" : "DMI:0010",
+          "description" : "CPU",
+          "product" : "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
+          "vendor" : "Intel Corp.",
+          "physid" : "10",
+          "businfo" : "cpu@0",
+          "version" : "6.142.10",
+          "serial" : "To Be Filled By O.E.M.",
+          "slot" : "U3E1",
+          "units" : "Hz",
+          "size" : 1142830000,
+          "capacity" : 3400000000,
+          "width" : 64,
+          "clock" : 100000000,
+          "configuration" : {
+            "cores" : "4",
+            "enabledcores" : "4",
+            "microcode" : "132",
+            "threads" : "8"
+          },
+          "capabilities" : {
+            "lm" : "64bits extensions (x86-64)",
+            "fpu" : "mathematical co-processor",
+            "fpu_exception" : "FPU exceptions reporting",
+            "wp" : true,
+            "vme" : "virtual mode extensions",
+            "de" : "debugging extensions",
+            "pse" : "page size extensions",
+            "tsc" : "time stamp counter",
+            "msr" : "model-specific registers",
+            "pae" : "4GB+ memory addressing (Physical Address Extension)",
+            "mce" : "machine check exceptions",
+            "cx8" : "compare and exchange 8-byte",
+            "apic" : "on-chip advanced programmable interrupt controller (APIC)",
+            "sep" : "fast system calls",
+            "mtrr" : "memory type range registers",
+            "pge" : "page global enable",
+            "mca" : "machine check architecture",
+            "cmov" : "conditional move instruction",
+            "pat" : "page attribute table",
+            "pse36" : "36-bit page size extensions",
+            "clflush" : true,
+            "dts" : "debug trace and EMON store MSRs",
+            "acpi" : "thermal control (ACPI)",
+            "mmx" : "multimedia extensions (MMX)",
+            "fxsr" : "fast floating point save/restore",
+            "sse" : "streaming SIMD extensions (SSE)",
+            "sse2" : "streaming SIMD extensions (SSE2)",
+            "ss" : "self-snoop",
+            "ht" : "HyperThreading",
+            "tm" : "thermal interrupt and status",
+            "pbe" : "pending break event",
+            "syscall" : "fast system calls",
+            "nx" : "no-execute bit (NX)",
+            "pdpe1gb" : true,
+            "rdtscp" : true,
+            "x86-64" : "64bits extensions (x86-64)",
+            "constant_tsc" : true,
+            "art" : true,
+            "arch_perfmon" : true,
+            "pebs" : true,
+            "bts" : true,
+            "rep_good" : true,
+            "nopl" : true,
+            "xtopology" : true,
+            "nonstop_tsc" : true,
+            "cpuid" : true,
+            "aperfmperf" : true,
+            "pni" : true,
+            "pclmulqdq" : true,
+            "dtes64" : true,
+            "monitor" : true,
+            "ds_cpl" : true,
+            "est" : true,
+            "tm2" : true,
+            "ssse3" : true,
+            "sdbg" : true,
+            "fma" : true,
+            "cx16" : true,
+            "xtpr" : true,
+            "pdcm" : true,
+            "pcid" : true,
+            "sse4_1" : true,
+            "sse4_2" : true,
+            "x2apic" : true,
+            "movbe" : true,
+            "popcnt" : true,
+            "tsc_deadline_timer" : true,
+            "aes" : true,
+            "xsave" : true,
+            "avx" : true,
+            "f16c" : true,
+            "rdrand" : true,
+            "lahf_lm" : true,
+            "abm" : true,
+            "3dnowprefetch" : true,
+            "cpuid_fault" : true,
+            "epb" : true,
+            "invpcid_single" : true,
+            "pti" : true,
+            "ibrs" : true,
+            "ibpb" : true,
+            "stibp" : true,
+            "fsgsbase" : true,
+            "tsc_adjust" : true,
+            "bmi1" : true,
+            "avx2" : true,
+            "smep" : true,
+            "bmi2" : true,
+            "erms" : true,
+            "invpcid" : true,
+            "mpx" : true,
+            "rdseed" : true,
+            "adx" : true,
+            "smap" : true,
+            "clflushopt" : true,
+            "intel_pt" : true,
+            "xsaveopt" : true,
+            "xsavec" : true,
+            "xgetbv1" : true,
+            "xsaves" : true,
+            "dtherm" : true,
+            "ida" : true,
+            "arat" : true,
+            "pln" : true,
+            "pts" : true,
+            "hwp" : true,
+            "hwp_notify" : true,
+            "hwp_act_window" : true,
+            "hwp_epp" : true,
+            "cpufreq" : "CPU Frequency scaling"
+          }
+        },
+        {
+          "id" : "pci",
+          "class" : "bridge",
+          "claimed" : true,
+          "handle" : "PCIBUS:0000:00",
+          "description" : "Host bridge",
+          "product" : "Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers",
+          "vendor" : "Intel Corporation",
+          "physid" : "100",
+          "businfo" : "pci@0000:00:00.0",
+          "version" : "08",
+          "width" : 32,
+          "clock" : 33000000,
+          "configuration" : {
+            "driver" : "skl_uncore"
+          },
+          "children" : [            {
+              "id" : "display",
+              "class" : "display",
+              "claimed" : true,
+              "handle" : "PCI:0000:00:02.0",
+              "description" : "VGA compatible controller",
+              "product" : "UHD Graphics 620",
+              "vendor" : "Intel Corporation",
+              "physid" : "2",
+              "businfo" : "pci@0000:00:02.0",
+              "logicalname" : "/dev/fb0",
+              "version" : "07",
+              "width" : 64,
+              "clock" : 33000000,
+              "configuration" : {
+                "depth" : "32",
+                "driver" : "i915",
+                "latency" : "0",
+                "mode" : "1366x768",
+                "resolution" : "1366,768",
+                "visual" : "truecolor",
+                "xres" : "1366",
+                "yres" : "768"
+              },
+              "capabilities" : {
+                "pciexpress" : "PCI Express",
+                "msi" : "Message Signalled Interrupts",
+                "pm" : "Power Management",
+                "vga_controller" : true,
+                "bus_master" : "bus mastering",
+                "cap_list" : "PCI capabilities listing",
+                "fb" : "framebuffer"
+              }
+            },
+            {
+              "id" : "generic:0",
+              "class" : "generic",
+              "claimed" : true,
+              "handle" : "PCI:0000:00:04.0",
+              "description" : "Signal processing controller",
+              "product" : "Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem",
+              "vendor" : "Intel Corporation",
+              "physid" : "4",
+              "businfo" : "pci@0000:00:04.0",
+              "version" : "08",
+              "width" : 64,
+              "clock" : 33000000,
+              "configuration" : {
+                "driver" : "proc_thermal",
+                "latency" : "0"
+              },
+              "capabilities" : {
+                "msi" : "Message Signalled Interrupts",
+                "pm" : "Power Management",
+                "bus_master" : "bus mastering",
+                "cap_list" : "PCI capabilities listing"
+              }
+            },
+            {
+              "id" : "usb",
+              "class" : "bus",
+              "claimed" : true,
+              "handle" : "PCI:0000:00:14.0",
+              "description" : "USB controller",
+              "product" : "Sunrise Point-LP USB 3.0 xHCI Controller",
+              "vendor" : "Intel Corporation",
+              "physid" : "14",
+              "businfo" : "pci@0000:00:14.0",
+              "version" : "21",
+              "width" : 64,
+              "clock" : 33000000,
+              "configuration" : {
+                "driver" : "xhci_hcd",
+                "latency" : "0"
+              },
+              "capabilities" : {
+                "pm" : "Power Management",
+                "msi" : "Message Signalled Interrupts",
+                "xhci" : true,
+                "bus_master" : "bus mastering",
+                "cap_list" : "PCI capabilities listing"
+              }
+            },
+            {
+              "id" : "generic:1",
+              "class" : "generic",
+              "claimed" : true,
+              "handle" : "PCI:0000:00:14.2",
+              "description" : "Signal processing controller",
+              "product" : "Sunrise Point-LP Thermal subsystem",
+              "vendor" : "Intel Corporation",
+              "physid" : "14.2",
+              "businfo" : "pci@0000:00:14.2",
+              "version" : "21",
+              "width" : 64,
+              "clock" : 33000000,
+              "configuration" : {
+                "driver" : "intel_pch_thermal",
+                "latency" : "0"
+              },
+              "capabilities" : {
+                "pm" : "Power Management",
+                "msi" : "Message Signalled Interrupts",
+                "bus_master" : "bus mastering",
+                "cap_list" : "PCI capabilities listing"
+              }
+            },
+            {
+              "id" : "generic:2",
+              "class" : "generic",
+              "claimed" : true,
+              "handle" : "PCI:0000:00:15.0",
+              "description" : "Signal processing controller",
+              "product" : "Sunrise Point-LP Serial IO I2C Controller #0",
+              "vendor" : "Intel Corporation",
+              "physid" : "15",
+              "businfo" : "pci@0000:00:15.0",
+              "version" : "21",
+              "width" : 64,
+              "clock" : 33000000,
+              "configuration" : {
+                "driver" : "intel-lpss",
+                "latency" : "0"
+              },
+              "capabilities" : {
+                "pm" : "Power Management",
+                "bus_master" : "bus mastering",
+                "cap_list" : "PCI capabilities listing"
+              }
+            },
+            {
+              "id" : "generic:3",
+              "class" : "generic",
+              "claimed" : true,
+              "handle" : "PCI:0000:00:15.1",
+              "description" : "Signal processing controller",
+              "product" : "Sunrise Point-LP Serial IO I2C Controller #1",
+              "vendor" : "Intel Corporation",
+              "physid" : "15.1",
+              "businfo" : "pci@0000:00:15.1",
+              "version" : "21",
+              "width" : 64,
+              "clock" : 33000000,
+              "configuration" : {
+                "driver" : "intel-lpss",
+                "latency" : "0"
+              },
+              "capabilities" : {
+                "pm" : "Power Management",
+                "bus_master" : "bus mastering",
+                "cap_list" : "PCI capabilities listing"
+              }
+            },
+            {
+              "id" : "communication",
+              "class" : "communication",
+              "claimed" : true,
+              "handle" : "PCI:0000:00:16.0",
+              "description" : "Communication controller",
+              "product" : "Sunrise Point-LP CSME HECI #1",
+              "vendor" : "Intel Corporation",
+              "physid" : "16",
+              "businfo" : "pci@0000:00:16.0",
+              "version" : "21",
+              "width" : 64,
+              "clock" : 33000000,
+              "configuration" : {
+                "driver" : "mei_me",
+                "latency" : "0"
+              },
+              "capabilities" : {
+                "pm" : "Power Management",
+                "msi" : "Message Signalled Interrupts",
+                "bus_master" : "bus mastering",
+                "cap_list" : "PCI capabilities listing"
+              }
+            },
+            {
+              "id" : "sata",
+              "class" : "storage",
+              "claimed" : true,
+              "handle" : "PCI:0000:00:17.0",
+              "description" : "SATA controller",
+              "product" : "Sunrise Point-LP SATA Controller [AHCI mode]",
+              "vendor" : "Intel Corporation",
+              "physid" : "17",
+              "businfo" : "pci@0000:00:17.0",
+              "logicalname" : "scsi0",
+              "version" : "21",
+              "width" : 32,
+              "clock" : 66000000,
+              "configuration" : {
+                "driver" : "ahci",
+                "latency" : "0"
+              },
+              "capabilities" : {
+                "sata" : true,
+                "msi" : "Message Signalled Interrupts",
+                "pm" : "Power Management",
+                "ahci_1.0" : true,
+                "bus_master" : "bus mastering",
+                "cap_list" : "PCI capabilities listing",
+                "emulated" : "Emulated device"
+              },
+              "children" : [                {
+                  "id" : "disk",
+                  "class" : "disk",
+                  "claimed" : true,
+                  "handle" : "SCSI:00:00:00:00",
+                  "description" : "ATA Disk",
+                  "product" : "KiTech SSD 256GB",
+                  "physid" : "0.0.0",
+                  "businfo" : "scsi@0:0.0.0",
+                  "logicalname" : "/dev/sda",
+                  "dev" : "8:0",
+                  "version" : "03A3",
+                  "serial" : "2023071700980",
+                  "units" : "bytes",
+                  "size" : 256060514304,
+                  "configuration" : {
+                    "ansiversion" : "5",
+                    "logicalsectorsize" : "512",
+                    "sectorsize" : "512",
+                    "signature" : "00093d6a"
+                  },
+                  "capabilities" : {
+                    "partitioned" : "Partitioned disk",
+                    "partitioned:dos" : "MS-DOS partition table"
+                  },
+                  "children" : [                    {
+                      "id" : "volume:0",
+                      "class" : "volume",
+                      "claimed" : true,
+                      "description" : "Windows NTFS volume",
+                      "physid" : "1",
+                      "businfo" : "scsi@0:0.0.0,1",
+                      "logicalname" : "/dev/sda1",
+                      "dev" : "8:1",
+                      "version" : "3.1",
+                      "serial" : "fc60-6938",
+                      "size" : 51379712,
+                      "capacity" : 52428800,
+                      "configuration" : {
+                        "clustersize" : "4096",
+                        "created" : "2024-11-13 18:40:13",
+                        "filesystem" : "ntfs",
+                        "label" : "System Reserved",
+                        "state" : "clean"
+                      },
+                      "capabilities" : {
+                        "primary" : "Primary partition",
+                        "bootable" : "Bootable partition (active)",
+                        "ntfs" : "Windows NTFS",
+                        "initialized" : "initialized volume"
+                      }
+                    },
+                    {
+                      "id" : "volume:1",
+                      "class" : "volume",
+                      "claimed" : true,
+                      "description" : "Windows NTFS volume",
+                      "physid" : "2",
+                      "businfo" : "scsi@0:0.0.0,2",
+                      "logicalname" : "/dev/sda2",
+                      "dev" : "8:2",
+                      "version" : "3.1",
+                      "serial" : "02eff4f7-c0d2-6140-9849-ec8e1d8772ba",
+                      "size" : 255450995200,
+                      "capacity" : 255470918656,
+                      "configuration" : {
+                        "clustersize" : "4096",
+                        "created" : "2024-11-13 18:40:14",
+                        "filesystem" : "ntfs",
+                        "state" : "clean"
+                      },
+                      "capabilities" : {
+                        "primary" : "Primary partition",
+                        "ntfs" : "Windows NTFS",
+                        "initialized" : "initialized volume"
+                      }
+                    },
+                    {
+                      "id" : "volume:2",
+                      "class" : "volume",
+                      "claimed" : true,
+                      "description" : "Windows NTFS volume",
+                      "physid" : "3",
+                      "businfo" : "scsi@0:0.0.0,3",
+                      "logicalname" : "/dev/sda3",
+                      "dev" : "8:3",
+                      "version" : "3.1",
+                      "serial" : "ca1d-9f65",
+                      "size" : 524287488,
+                      "capacity" : 532676608,
+                      "configuration" : {
+                        "clustersize" : "4096",
+                        "created" : "2024-11-13 18:45:31",
+                        "filesystem" : "ntfs",
+                        "state" : "clean"
+                      },
+                      "capabilities" : {
+                        "primary" : "Primary partition",
+                        "ntfs" : "Windows NTFS",
+                        "initialized" : "initialized volume"
+                      }
+                    }]
+                }]
+            },
+            {
+              "id" : "pci:0",
+              "class" : "bridge",
+              "claimed" : true,
+              "handle" : "PCIBUS:0000:01",
+              "description" : "PCI bridge",
+              "product" : "Sunrise Point-LP PCI Express Root Port #5",
+              "vendor" : "Intel Corporation",
+              "physid" : "1c",
+              "businfo" : "pci@0000:00:1c.0",
+              "version" : "f1",
+              "width" : 32,
+              "clock" : 33000000,
+              "configuration" : {
+                "driver" : "pcieport"
+              },
+              "capabilities" : {
+                "pci" : true,
+                "pciexpress" : "PCI Express",
+                "msi" : "Message Signalled Interrupts",
+                "pm" : "Power Management",
+                "normal_decode" : true,
+                "bus_master" : "bus mastering",
+                "cap_list" : "PCI capabilities listing"
+              },
+              "children" : [                {
+                  "id" : "network",
+                  "class" : "network",
+                  "claimed" : true,
+                  "handle" : "PCI:0000:01:00.0",
+                  "description" : "Ethernet interface",
+                  "product" : "RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller",
+                  "vendor" : "Realtek Semiconductor Co., Ltd.",
+                  "physid" : "0",
+                  "businfo" : "pci@0000:01:00.0",
+                  "logicalname" : "eth0",
+                  "version" : "15",
+                  "serial" : "10:e7:c6:e3:ca:52",
+                  "units" : "bit/s",
+                  "size" : 1000000000,
+                  "capacity" : 1000000000,
+                  "width" : 64,
+                  "clock" : 33000000,
+                  "configuration" : {
+                    "autonegotiation" : "on",
+                    "broadcast" : "yes",
+                    "driver" : "r8169",
+                    "driverversion" : "5.15.10-tinycore64",
+                    "duplex" : "full",
+                    "ip" : "172.22.4.11",
+                    "latency" : "0",
+                    "link" : "yes",
+                    "multicast" : "yes",
+                    "port" : "twisted pair",
+                    "speed" : "1Gbit/s"
+                  },
+                  "capabilities" : {
+                    "pm" : "Power Management",
+                    "msi" : "Message Signalled Interrupts",
+                    "pciexpress" : "PCI Express",
+                    "msix" : "MSI-X",
+                    "bus_master" : "bus mastering",
+                    "cap_list" : "PCI capabilities listing",
+                    "ethernet" : true,
+                    "physical" : "Physical interface",
+                    "tp" : "twisted pair",
+                    "mii" : "Media Independant Interface",
+                    "10bt" : "10Mbit/s",
+                    "10bt-fd" : "10Mbit/s (full duplex)",
+                    "100bt" : "100Mbit/s",
+                    "100bt-fd" : "100Mbit/s (full duplex)",
+                    "1000bt-fd" : "1Gbit/s (full duplex)",
+                    "autonegotiation" : "Auto-negotiation"
+                  }
+                }]
+            },
+            {
+              "id" : "pci:1",
+              "class" : "bridge",
+              "claimed" : true,
+              "handle" : "PCIBUS:0000:02",
+              "description" : "PCI bridge",
+              "product" : "Sunrise Point-LP PCI Express Root Port #6",
+              "vendor" : "Intel Corporation",
+              "physid" : "1c.5",
+              "businfo" : "pci@0000:00:1c.5",
+              "version" : "f1",
+              "width" : 32,
+              "clock" : 33000000,
+              "configuration" : {
+                "driver" : "pcieport"
+              },
+              "capabilities" : {
+                "pci" : true,
+                "pciexpress" : "PCI Express",
+                "msi" : "Message Signalled Interrupts",
+                "pm" : "Power Management",
+                "normal_decode" : true,
+                "bus_master" : "bus mastering",
+                "cap_list" : "PCI capabilities listing"
+              },
+              "children" : [                {
+                  "id" : "network",
+                  "class" : "network",
+                  "handle" : "PCI:0000:02:00.0",
+                  "description" : "Network controller",
+                  "product" : "Wireless 8265 / 8275",
+                  "vendor" : "Intel Corporation",
+                  "physid" : "0",
+                  "businfo" : "pci@0000:02:00.0",
+                  "version" : "78",
+                  "width" : 64,
+                  "clock" : 33000000,
+                  "configuration" : {
+                    "latency" : "0"
+                  },
+                  "capabilities" : {
+                    "pm" : "Power Management",
+                    "msi" : "Message Signalled Interrupts",
+                    "pciexpress" : "PCI Express",
+                    "bus_master" : "bus mastering",
+                    "cap_list" : "PCI capabilities listing"
+                  }
+                }]
+            },
+            {
+              "id" : "pci:2",
+              "class" : "bridge",
+              "claimed" : true,
+              "handle" : "PCIBUS:0000:03",
+              "description" : "PCI bridge",
+              "product" : "Intel Corporation",
+              "vendor" : "Intel Corporation",
+              "physid" : "1d",
+              "businfo" : "pci@0000:00:1d.0",
+              "version" : "f1",
+              "width" : 32,
+              "clock" : 33000000,
+              "configuration" : {
+                "driver" : "pcieport"
+              },
+              "capabilities" : {
+                "pci" : true,
+                "pciexpress" : "PCI Express",
+                "msi" : "Message Signalled Interrupts",
+                "pm" : "Power Management",
+                "normal_decode" : true,
+                "bus_master" : "bus mastering",
+                "cap_list" : "PCI capabilities listing"
+              },
+              "children" : [                {
+                  "id" : "generic",
+                  "class" : "bus",
+                  "claimed" : true,
+                  "handle" : "PCI:0000:03:00.0",
+                  "description" : "MMC Host",
+                  "product" : "RTS522A PCI Express Card Reader",
+                  "vendor" : "Realtek Semiconductor Co., Ltd.",
+                  "physid" : "0",
+                  "businfo" : "pci@0000:03:00.0",
+                  "logicalname" : "mmc0",
+                  "version" : "01",
+                  "width" : 32,
+                  "clock" : 33000000,
+                  "configuration" : {
+                    "driver" : "rtsx_pci",
+                    "latency" : "0"
+                  },
+                  "capabilities" : {
+                    "pm" : "Power Management",
+                    "msi" : "Message Signalled Interrupts",
+                    "pciexpress" : "PCI Express",
+                    "bus_master" : "bus mastering",
+                    "cap_list" : "PCI capabilities listing"
+                  }
+                }]
+            },
+            {
+              "id" : "isa",
+              "class" : "bridge",
+              "claimed" : true,
+              "handle" : "PCI:0000:00:1f.0",
+              "description" : "ISA bridge",
+              "product" : "Sunrise Point LPC Controller/eSPI Controller",
+              "vendor" : "Intel Corporation",
+              "physid" : "1f",
+              "businfo" : "pci@0000:00:1f.0",
+              "version" : "21",
+              "width" : 32,
+              "clock" : 33000000,
+              "configuration" : {
+                "latency" : "0"
+              },
+              "capabilities" : {
+                "isa" : true,
+                "bus_master" : "bus mastering"
+              },
+              "children" : [                {
+                  "id" : "pnp00:00",
+                  "class" : "system",
+                  "claimed" : true,
+                  "product" : "Motherboard registers",
+                  "physid" : "0",
+                  "configuration" : {
+                    "driver" : "system"
+                  },
+                  "capabilities" : {
+                    "pnp" : true
+                  }
+                },
+                {
+                  "id" : "pnp00:01",
+                  "class" : "system",
+                  "claimed" : true,
+                  "product" : "Motherboard registers",
+                  "physid" : "1",
+                  "configuration" : {
+                    "driver" : "system"
+                  },
+                  "capabilities" : {
+                    "pnp" : true
+                  }
+                },
+                {
+                  "id" : "pnp00:02",
+                  "class" : "system",
+                  "claimed" : true,
+                  "product" : "Motherboard registers",
+                  "physid" : "2",
+                  "configuration" : {
+                    "driver" : "system"
+                  },
+                  "capabilities" : {
+                    "pnp" : true
+                  }
+                },
+                {
+                  "id" : "pnp00:03",
+                  "class" : "system",
+                  "claimed" : true,
+                  "product" : "AT Real-Time Clock",
+                  "physid" : "3",
+                  "configuration" : {
+                    "driver" : "rtc_cmos"
+                  },
+                  "capabilities" : {
+                    "pnp" : true
+                  }
+                },
+                {
+                  "id" : "pnp00:04",
+                  "class" : "generic",
+                  "claimed" : true,
+                  "product" : "PnP device INT3f0d",
+                  "physid" : "4",
+                  "configuration" : {
+                    "driver" : "system"
+                  },
+                  "capabilities" : {
+                    "pnp" : true
+                  }
+                },
+                {
+                  "id" : "pnp00:05",
+                  "class" : "generic",
+                  "claimed" : true,
+                  "product" : "PnP device HPQ8002",
+                  "physid" : "5",
+                  "configuration" : {
+                    "driver" : "i8042 kbd"
+                  },
+                  "capabilities" : {
+                    "pnp" : true
+                  }
+                },
+                {
+                  "id" : "pnp00:06",
+                  "class" : "generic",
+                  "claimed" : true,
+                  "product" : "PnP device SYN3064",
+                  "physid" : "6",
+                  "configuration" : {
+                    "driver" : "i8042 aux"
+                  },
+                  "capabilities" : {
+                    "pnp" : true
+                  }
+                },
+                {
+                  "id" : "pnp00:07",
+                  "class" : "system",
+                  "claimed" : true,
+                  "product" : "Motherboard registers",
+                  "physid" : "7",
+                  "configuration" : {
+                    "driver" : "system"
+                  },
+                  "capabilities" : {
+                    "pnp" : true
+                  }
+                },
+                {
+                  "id" : "pnp00:08",
+                  "class" : "system",
+                  "claimed" : true,
+                  "product" : "Motherboard registers",
+                  "physid" : "8",
+                  "configuration" : {
+                    "driver" : "system"
+                  },
+                  "capabilities" : {
+                    "pnp" : true
+                  }
+                },
+                {
+                  "id" : "pnp00:09",
+                  "class" : "system",
+                  "claimed" : true,
+                  "product" : "Motherboard registers",
+                  "physid" : "9",
+                  "configuration" : {
+                    "driver" : "system"
+                  },
+                  "capabilities" : {
+                    "pnp" : true
+                  }
+                },
+                {
+                  "id" : "pnp00:0a",
+                  "class" : "system",
+                  "claimed" : true,
+                  "product" : "Motherboard registers",
+                  "physid" : "a",
+                  "configuration" : {
+                    "driver" : "system"
+                  },
+                  "capabilities" : {
+                    "pnp" : true
+                  }
+                }]
+            },
+            {
+              "id" : "memory",
+              "class" : "memory",
+              "handle" : "PCI:0000:00:1f.2",
+              "description" : "Memory controller",
+              "product" : "Sunrise Point-LP PMC",
+              "vendor" : "Intel Corporation",
+              "physid" : "1f.2",
+              "businfo" : "pci@0000:00:1f.2",
+              "version" : "21",
+              "width" : 32,
+              "clock" : 33000000,
+              "configuration" : {
+                "latency" : "0"
+              },
+              "capabilities" : {
+                "bus_master" : "bus mastering"
+              }
+            },
+            {
+              "id" : "multimedia",
+              "class" : "multimedia",
+              "handle" : "PCI:0000:00:1f.3",
+              "description" : "Audio device",
+              "product" : "Sunrise Point-LP HD Audio",
+              "vendor" : "Intel Corporation",
+              "physid" : "1f.3",
+              "businfo" : "pci@0000:00:1f.3",
+              "version" : "21",
+              "width" : 64,
+              "clock" : 33000000,
+              "configuration" : {
+                "latency" : "0"
+              },
+              "capabilities" : {
+                "pm" : "Power Management",
+                "msi" : "Message Signalled Interrupts",
+                "bus_master" : "bus mastering",
+                "cap_list" : "PCI capabilities listing"
+              }
+            },
+            {
+              "id" : "serial",
+              "class" : "bus",
+              "claimed" : true,
+              "handle" : "PCI:0000:00:1f.4",
+              "description" : "SMBus",
+              "product" : "Sunrise Point-LP SMBus",
+              "vendor" : "Intel Corporation",
+              "physid" : "1f.4",
+              "businfo" : "pci@0000:00:1f.4",
+              "version" : "21",
+              "width" : 64,
+              "clock" : 33000000,
+              "configuration" : {
+                "driver" : "i801_smbus",
+                "latency" : "0"
+              }
+            }]
+        }]
+    },
+    {
+      "id" : "battery",
+      "class" : "power",
+      "claimed" : true,
+      "handle" : "DMI:000A",
+      "product" : "RR03048XL",
+      "vendor" : "333-54-2A-A",
+      "physid" : "1",
+      "slot" : "Primary",
+      "units" : "mWh",
+      "capacity" : 48010,
+      "configuration" : {
+        "voltage" : "11.4V"
+      }
+    },
+    {
+      "id" : "input:0",
+      "class" : "input",
+      "claimed" : true,
+      "product" : "Sleep Button",
+      "physid" : "2",
+      "logicalname" : ["input0", "/dev/input/event0"],
+      "capabilities" : {
+        "platform" : true
+      }
+    },
+    {
+      "id" : "input:1",
+      "class" : "input",
+      "claimed" : true,
+      "product" : "Lid Switch",
+      "physid" : "3",
+      "logicalname" : ["input1", "/dev/input/event1"],
+      "capabilities" : {
+        "platform" : true
+      }
+    },
+    {
+      "id" : "input:2",
+      "class" : "input",
+      "claimed" : true,
+      "product" : "SynPS/2 Synaptics TouchPad",
+      "physid" : "4",
+      "logicalname" : ["input10", "/dev/input/event4", "/dev/input/mouse0"],
+      "capabilities" : {
+        "i8042" : "i8042 PC AT keyboard controller"
+      }
+    },
+    {
+      "id" : "input:3",
+      "class" : "input",
+      "claimed" : true,
+      "product" : "Wireless hotkeys",
+      "physid" : "5",
+      "logicalname" : ["input12", "/dev/input/event5"],
+      "capabilities" : {
+        "platform" : true
+      }
+    },
+    {
+      "id" : "input:4",
+      "class" : "input",
+      "claimed" : true,
+      "product" : "PC Speaker",
+      "physid" : "6",
+      "logicalname" : ["input13", "/dev/input/event6"],
+      "capabilities" : {
+        "isa" : "ISA bus"
+      }
+    },
+    {
+      "id" : "input:5",
+      "class" : "input",
+      "claimed" : true,
+      "product" : "HP WMI hotkeys",
+      "physid" : "7",
+      "logicalname" : ["input14", "/dev/input/event7"],
+      "capabilities" : {
+        "platform" : true
+      }
+    },
+    {
+      "id" : "input:6",
+      "class" : "input",
+      "claimed" : true,
+      "product" : "ST LIS3LV02DL Accelerometer",
+      "physid" : "8",
+      "logicalname" : ["input15", "/dev/input/event8"],
+      "capabilities" : {
+        "platform" : true
+      }
+    },
+    {
+      "id" : "input:7",
+      "class" : "input",
+      "claimed" : true,
+      "product" : "Video Bus",
+      "physid" : "9",
+      "logicalname" : ["input16", "/dev/input/event9"],
+      "capabilities" : {
+        "platform" : true
+      }
+    },
+    {
+      "id" : "input:8",
+      "class" : "input",
+      "claimed" : true,
+      "product" : "Power Button",
+      "physid" : "a",
+      "logicalname" : ["input2", "/dev/input/event2"],
+      "capabilities" : {
+        "platform" : true
+      }
+    },
+    {
+      "id" : "input:9",
+      "class" : "input",
+      "claimed" : true,
+      "product" : "AT Translated Set 2 keyboard",
+      "physid" : "b",
+      "logicalname" : ["input3", "/dev/input/event3", "input3::capslock", "input3::numlock", "input3::scrolllock"],
+      "capabilities" : {
+        "i8042" : "i8042 PC AT keyboard controller"
+      }
+    },
+    {
+      "id" : "network",
+      "class" : "network",
+      "disabled" : true,
+      "claimed" : true,
+      "description" : "Ethernet interface",
+      "physid" : "c",
+      "businfo" : "usb@1:5",
+      "logicalname" : "usb0",
+      "serial" : "02:1e:10:1f:00:00",
+      "configuration" : {
+        "autonegotiation" : "off",
+        "broadcast" : "yes",
+        "driver" : "cdc_ether",
+        "driverversion" : "5.15.10-tinycore64",
+        "duplex" : "half",
+        "firmware" : "CDC Ethernet Device",
+        "link" : "no",
+        "multicast" : "yes",
+        "port" : "twisted pair"
+      },
+      "capabilities" : {
+        "ethernet" : true,
+        "physical" : "Physical interface"
+      }
+    }]
+}

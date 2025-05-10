@@ -1,0 +1,712 @@
+        private (string jsonReturn, IFunctionReturn functionReturn) DesktopHardwareInfoDetailsExcelReport(DesktopARReport _desktopARReport, DatabaseSettingType _databaseSettingType)
+        {
+            #region Local Variables
+            string _methodName = "F:Admin:GetDesktopHardwareInfoDetails";
+            _auditLog.ActionGroup = _methodName;
+            _auditLog.Action = Enumeration.Action.Get.ToString();
+            string _examShiftGuid = string.Empty;
+            StringBuilder _sqlQuery = null;
+            IFunctionReturn _functionReturn = null;
+            DataSet _dataSet = null;
+            DataTable _dataTable = null;
+            TimeSpan? _sqlconnTime = null;
+            TimeSpan? _queryTime = null;
+
+            //JSON data
+            string _jsonReturn = string.Empty;
+            StringWriter _sw = null;
+            JsonTextWriter _writer = null;
+            string _total_memory_size_in_gb = string.Empty;
+            string _networkSpeed = string.Empty;
+            int _cpuCores = 0;
+            int _sockets = 0;
+            string _OSType = "";
+            string _excelName = "";
+            var stream = new MemoryStream();
+            var workbook = new XLWorkbook();
+            #endregion
+
+            _functionReturn = new FunctionReturn();
+            if (_functionReturn.Message.Count <= 0)
+            {
+                try
+                {
+                    _auditLog.Message = ApplicationConstants.GenericMessages.GetExamShiftsInfoStarted;
+                    CommonFunctions.Log(Enumeration.LogLevel.Information, _loggerFunctions, _auditLog);
+                    workbook = new XLWorkbook();
+                    var worksheet = workbook.Worksheets.Add("Audit Report");
+
+                    worksheet.Range(1, 1, 2, 61).Merge().Value = "AUDIT REPORT";
+                    worksheet.Range(1, 1, 2, 61).Style.Font.Bold = true;
+                    worksheet.Range(1, 1, 2, 61).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    worksheet.Range(1, 1, 2, 61).Style.Fill.BackgroundColor = XLColor.DarkGray;
+                    worksheet.Range(1, 1, 2, 61).Style.Font.FontColor = XLColor.White;
+
+                    // Formatting subheadings
+                    worksheet.Range(2, 1, 2, 9).Merge().Value = "System Info:";
+                    worksheet.Range(2, 1, 2, 9).Style.Font.Bold = true;
+
+                    worksheet.Range(2, 10, 2, 15).Merge().Value = "Memory Info:";
+                    worksheet.Range(2, 10, 2, 15).Style.Font.Bold = true;
+
+                    worksheet.Range(2, 16, 2, 19).Merge().Value = "CPU Info:";
+                    worksheet.Range(2, 16, 2, 19).Style.Font.Bold = true;
+
+                    worksheet.Range(2, 20, 2, 25).Merge().Value = "Input Devices Info:";
+                    worksheet.Range(2, 20, 2, 25).Style.Font.Bold = true;
+
+                    worksheet.Range(2, 26, 2, 29).Merge().Value = "Network Devices Info:";
+                    worksheet.Range(2, 26, 2, 29).Style.Font.Bold = true;
+
+                    worksheet.Range(2, 30, 2, 32).Merge().Value = "Multimedia Devices Info:";
+                    worksheet.Range(2, 30, 2, 32).Style.Font.Bold = true;
+
+                    worksheet.Range(2, 33, 2, 37).Merge().Value = "Disk Info:";
+                    worksheet.Range(2, 33, 2, 37).Style.Font.Bold = true;
+
+                    worksheet.Range(2, 38, 2, 41).Merge().Value = "Bus Info:";
+                    worksheet.Range(2, 38, 2, 41).Style.Font.Bold = true;
+
+                    worksheet.Range(2, 42, 2, 45).Merge().Value = "Bridge Info:";
+                    worksheet.Range(2, 42, 2, 45).Style.Font.Bold = true;
+
+                    worksheet.Range(2, 46, 2, 49).Merge().Value = "Communication Info:";
+                    worksheet.Range(2, 46, 2, 49).Style.Font.Bold = true;
+
+                    worksheet.Range(2, 50, 2, 53).Merge().Value = "Generic Info:";
+                    worksheet.Range(2, 50, 2, 53).Style.Font.Bold = true;
+
+                    worksheet.Range(2, 54, 2, 57).Merge().Value = "Volume Info:";
+                    worksheet.Range(2, 54, 2, 57).Style.Font.Bold = true;
+
+                    worksheet.Range(2, 58, 2, 61).Merge().Value = "System Info:";
+                    worksheet.Range(2, 58, 2, 61).Style.Font.Bold = true;
+
+                    // Define headers
+                    string[] headers = {
+    "S. No.", "MAC ID", "Desktop Label Name", "Description", "Product", "Vendor", "Serial", "Date Time","OS",
+    "Total Memory Size (GB)", "Memory Description", "Memory Product", "Memory Vendor", "Memory Serial", "Memory Size",
+    "CPU Product", "CPU Vendor", "CPU Slot", "CPU Cores",
+    "Description", "Product", "Vendor", "USB", "USB 1", "USB 2",
+    "Description", "Product", "Vendor", "Speed",
+    "Description", "Product", "Vendor",
+    "Description", "Product", "Vendor", "Serial", "Size",
+    "Bus Product", "Bus Vendor", "Bus Description", "Serial",
+    "Bridge Product", "Bridge Vendor", "Bridge Description", "Serial",
+    "Communication Product", "Communication Vendor", "Communication Description", "Serial", 
+    "Generic Product", "Generic Vendor", "Generic Description", "Serial",
+    "Volume Product", "Volume Vendor", "Volume Description", "Serial", 
+    "System Product", "System Vendor", "System Description", "Serial",
+};
+
+                    // Adding headers
+                    for (int i = 0; i < headers.Length; i++)
+                    {
+                        worksheet.Cell(3, i + 1).Value = headers[i];
+                        worksheet.Cell(3, i + 1).Style.Font.Bold = true;
+                        worksheet.Cell(3, i + 1).Style.Fill.BackgroundColor = XLColor.LightGray;
+                        worksheet.Cell(3, i + 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    }
+
+
+                    int rowNumber = 4; // Start inserting data from row 4
+                    _sw = new StringWriter();
+                    _writer = new JsonTextWriter(_sw);
+                    //GET DATA
+                    _sqlQuery = new StringBuilder();
+                    foreach (string _arid in _desktopARReport.ARID)
+                    {
+                        _sqlQuery.Append(" SELECT ");
+                        _sqlQuery.Append(" distinct  him.hardware_info_id as hardware_info_id,him.infra_desktop_hardware_details_id ");
+                        _sqlQuery.Append(" from auditrun_hw_info_main him ");
+                        _sqlQuery.Append(" JOIN auditrun_infra_desktop_to_hardware_details idhd on idhd.id=him.infra_desktop_hardware_details_id AND idhd.audit_id=him.audit_id ");
+                        _sqlQuery.Append(" join auditrun_infra_desktops id on id.desktop_id=idhd.infra_desktop_id AND id.audit_id=idhd.audit_id ");
+                        _sqlQuery.Append(" LEFT JOIN auditrun_hw_children_main cm on cm.hardware_info_id=him.hardware_info_id AND cm.audit_id=him.audit_id  ");
+                        _sqlQuery.Append(" where  ");
+                        _sqlQuery.Append(" him.audit_id='" + _arid + "'");
+                        _sqlQuery.Append(" order by idhd.id ;");
+                        (_functionReturn, _dataTable, _sqlconnTime, _queryTime) = _databaseFunctions.ExecuteSelectDataTable(_sqlQuery.ToString(), _methodName, _examShiftGuid, Enumeration.DatabaseSettingType.Audit);
+                        if (_functionReturn.Status == true)
+                        {
+                            if (_dataTable != null && _dataTable.Rows.Count > 0)
+                            {
+                                _writer.WriteStartObject();
+                                _writer.WritePropertyName(ApplicationJsonReturnConstants.PropertyNames.Desktops);
+                                _writer.WriteStartArray();
+
+                                foreach (DataRow __row in _dataTable.Rows)
+                                {
+                                    string _hardwareInfoId = __row["hardware_info_id"] == DBNull.Value ? "" : Convert.ToString(__row["hardware_info_id"]);
+                                    string _infra_desktop_hardware_details_id = __row["infra_desktop_hardware_details_id"] == DBNull.Value ? "" : Convert.ToString(__row["infra_desktop_hardware_details_id"]);
+
+                                    _sqlQuery.Clear();
+                                    // desktop
+                                    _sqlQuery.Append(" SELECT ");
+                                    _sqlQuery.Append(" distinct  him.hardware_info_id as hardware_info_id,id.system_machine_id,id.system_id_hash,id.desktop_label_name, id.date_time, him.description, him.product,him.vendor,him.serial,idhd.operating_system ");
+                                    _sqlQuery.Append(" from auditrun_hw_info_main him ");
+                                    _sqlQuery.Append(" JOIN auditrun_infra_desktop_to_hardware_details idhd on idhd.id=him.infra_desktop_hardware_details_id AND idhd.audit_id = him.audit_id ");
+                                    _sqlQuery.Append(" join auditrun_infra_desktops id on id.desktop_id=idhd.infra_desktop_id AND id.audit_id = idhd.audit_id ");
+                                    _sqlQuery.Append(" LEFT JOIN auditrun_hw_children_main cm on cm.hardware_info_id=him.hardware_info_id  AND cm.audit_id = him.audit_id ");
+                                    _sqlQuery.Append(" where him.hardware_info_id='" + _hardwareInfoId + "' ");
+                                    _sqlQuery.Append(" and idhd.audit_id='" + _arid + "' AND id.audit_id= '" + _arid + "'; ");
+
+                                    //Centre
+                                    _sqlQuery.Append(" SELECT distinct ");
+                                    _sqlQuery.Append(" cm.centre_name,cm.centre_code, cma.address,cma.city_name,cma.state_name,cma.post_code  ");
+                                    _sqlQuery.Append(" from auditrun_centre_main cm ");
+                                    _sqlQuery.Append(" JOIN auditrun_centres_all cma on cma.centre_guid=cm.centre_guid ");
+                                    _sqlQuery.Append(" where cm.audit_id='" + _arid + "'");
+                                    _sqlQuery.Append(" ; ");
+
+                                    // memory
+                                    _sqlQuery.Append(" SELECT distinct ");
+                                    _sqlQuery.Append(" cm.hardware_info_id,cm1.parent_id, cm.id as cm_id,cm.units as cm_units, cm.size as total_memory_size,cm1.id ,cm1.class , cm1.description,cm1.product, cm1.vendor, cm1.serial,cm1.size as memory_size ");
+                                    _sqlQuery.Append(" FROM auditrun_hw_children_main cm ");
+                                    _sqlQuery.Append(" join auditrun_hw_children_main cm1 on cm1.parent_id=cm.hw_children_main_id ");
+                                    _sqlQuery.Append(" where cm.class='memory' AND  cm1.description !='[empty]' AND cm1.description != 'SODIMM [empty]' ");
+                                    _sqlQuery.Append(" and cm.hardware_info_id='" + _hardwareInfoId + "' AND cm1.size <> '' ");
+                                    _sqlQuery.Append(" and cm.audit_id='" + _arid + "' and cm1.audit_id='" + _arid + "' ");
+                                    _sqlQuery.Append(" ;");
+
+
+                                    // cpu
+                                    _sqlQuery.Append(" SELECT distinct ");
+                                    _sqlQuery.Append(" cm.hardware_info_id,cm.id as cpu_name, cm.product,cm.vendor,cm.slot ,hcc.cores ");
+                                    _sqlQuery.Append(" from auditrun_hw_children_main cm ");
+                                    _sqlQuery.Append(" LEFT JOIN auditrun_hw_children_configuration hcc on hcc.hw_children_main_id=cm.hw_children_main_id ");
+                                    _sqlQuery.Append(" where cm.id='cpu' ");
+                                    _sqlQuery.Append(" and cm.hardware_info_id='" + _hardwareInfoId + "' ");
+                                    _sqlQuery.Append(" and cm.audit_id='" + _arid + "' and hcc.audit_id='" + _arid + "' ");
+                                    _sqlQuery.Append(" ;");
+
+
+                                    // display
+                                    _sqlQuery.Append(" SELECT distinct ");
+                                    _sqlQuery.Append(" cm.hardware_info_id, cm.hw_children_main_id, cm.description,cm.product,cm.vendor ");
+                                    _sqlQuery.Append(" FROM auditrun_hw_children_main cm ");
+                                    _sqlQuery.Append(" where cm.class='display'  ");
+                                    _sqlQuery.Append(" and cm.hardware_info_id='" + _hardwareInfoId + "' ");
+                                    _sqlQuery.Append(" and cm.audit_id='" + _arid + "'");
+                                    _sqlQuery.Append(" ;");
+
+                                    // input
+                                    _sqlQuery.Append(" SELECT distinct ");
+                                    _sqlQuery.Append(" cm.hardware_info_id,cm.hw_children_main_id, cm.description, cm.product,cm.vendor, hcc.usb, hcc.usb_1,hcc.usb_2 ");
+                                    _sqlQuery.Append(" FROM auditrun_hw_children_main cm ");
+                                    _sqlQuery.Append(" LEFT JOIN auditrun_hw_children_capabilities hcc on hcc.hw_children_main_id=cm.hw_children_main_id ");
+                                    _sqlQuery.Append(" where cm.class = 'input' ");
+                                    _sqlQuery.Append(" and cm.hardware_info_id='" + _hardwareInfoId + "' ");
+                                    _sqlQuery.Append(" and cm.audit_id='" + _arid + "' and hcc.audit_id='" + _arid + "' ");
+                                    _sqlQuery.Append(" ;");
+
+                                    // network
+                                    _sqlQuery.Append(" SELECT distinct ");
+                                    _sqlQuery.Append(" cm.hardware_info_id, cm.hw_children_main_id, cm.description, cm.product,cm.vendor, cm.serial, cm.units,cm.size,cm.capacity, hcc.speed ");
+                                    _sqlQuery.Append(" FROM auditrun_hw_children_main cm ");
+                                    _sqlQuery.Append(" LEFT JOIN auditrun_hw_children_configuration hcc on hcc.hw_children_main_id=cm.hw_children_main_id ");
+                                    _sqlQuery.Append(" where cm.class = 'network' ");
+                                    _sqlQuery.Append(" and cm.hardware_info_id='" + _hardwareInfoId + "' AND cm.size <> ''AND cm.product <> '' ");
+                                    _sqlQuery.Append(" and cm.audit_id='" + _arid + "' and hcc.audit_id='" + _arid + "' ");
+                                    _sqlQuery.Append(" ;");
+
+                                    // multimedia
+                                    _sqlQuery.Append(" SELECT distinct ");
+                                    _sqlQuery.Append(" cm.hardware_info_id, cm.hw_children_main_id, cm.description, cm.product,cm.vendor,hcc.usb, hcc.usb_1,  hcc.usb_2 ");
+                                    _sqlQuery.Append(" FROM auditrun_hw_children_main cm ");
+                                    _sqlQuery.Append(" LEFT JOIN auditrun_hw_children_capabilities hcc on hcc.hw_children_main_id=cm.hw_children_main_id ");
+                                    _sqlQuery.Append(" where cm.class = 'multimedia' ");
+                                    _sqlQuery.Append(" and cm.hardware_info_id='" + _hardwareInfoId + "' ");
+                                    _sqlQuery.Append(" and cm.audit_id='" + _arid + "' AND hcc.audit_id='" + _arid + "' ");
+                                    _sqlQuery.Append(" ;");
+
+
+
+                                    // disk
+                                    _sqlQuery.Append(" SELECT  distinct ");
+                                    _sqlQuery.Append(" cm.hardware_info_id,cm.hw_children_main_id, cm.description, cm.product,cm.vendor, cm.serial,cm.units, cm.size ");
+                                    _sqlQuery.Append(" FROM auditrun_hw_children_main cm ");
+                                    _sqlQuery.Append(" where cm.class = 'disk' ");
+                                    _sqlQuery.Append(" and cm.hardware_info_id='" + _hardwareInfoId + "' ");
+                                    _sqlQuery.Append(" and cm.audit_id='" + _arid + "'");
+                                    _sqlQuery.Append(" ;");
+
+
+
+                                    //bus
+                                    _sqlQuery.Append(" SELECT distinct ");
+                                    _sqlQuery.Append(" cm.hardware_info_id,cm.hw_children_main_id, cm.description, cm.product,cm.vendor, cm.serial,cm.units, cm.size, cm.class as type ");
+                                    _sqlQuery.Append(" FROM auditrun_hw_children_main cm ");
+                                    _sqlQuery.Append(" where cm.class = 'bus' ");
+                                    _sqlQuery.Append(" and cm.hardware_info_id='" + _hardwareInfoId + "' ");
+                                    _sqlQuery.Append(" and cm.audit_id='" + _arid + "' ");
+                                    _sqlQuery.Append(" ; ");
+
+                                    //processor
+                                    _sqlQuery.Append(" SELECT distinct ");
+                                    _sqlQuery.Append(" cm.hardware_info_id,cm.hw_children_main_id, cm.description, cm.product,cm.vendor, cm.serial,cm.units, cm.size, cm.class as type ");
+                                    _sqlQuery.Append(" FROM auditrun_hw_children_main cm ");
+                                    _sqlQuery.Append(" where cm.class = 'processor' ");
+                                    _sqlQuery.Append(" and cm.hardware_info_id='" + _hardwareInfoId + "'  ");
+                                    _sqlQuery.Append(" and cm.audit_id='" + _arid + "' ");
+                                    _sqlQuery.Append(" ; ");
+
+
+
+
+                                    //bridge
+                                    _sqlQuery.Append(" SELECT distinct ");
+                                    _sqlQuery.Append(" cm.hardware_info_id,cm.hw_children_main_id, cm.description, cm.product,cm.vendor, cm.serial,cm.units, cm.size, cm.class as type ");
+                                    _sqlQuery.Append(" FROM auditrun_hw_children_main cm ");
+                                    _sqlQuery.Append(" where cm.class = 'bridge' ");
+                                    _sqlQuery.Append(" and cm.hardware_info_id='" + _hardwareInfoId + "' ");
+                                    _sqlQuery.Append(" and cm.audit_id='" + _arid + "' ");
+                                    _sqlQuery.Append(" ; ");
+
+
+
+                                    //communication
+                                    _sqlQuery.Append(" SELECT distinct ");
+                                    _sqlQuery.Append(" cm.hardware_info_id,cm.hw_children_main_id, cm.description, cm.product,cm.vendor, cm.serial,cm.units, cm.size , cm.class as type ");
+                                    _sqlQuery.Append(" FROM auditrun_hw_children_main cm  ");
+                                    _sqlQuery.Append(" where cm.class = 'communication'  ");
+                                    _sqlQuery.Append(" and cm.hardware_info_id='" + _hardwareInfoId + "'  ");
+                                    _sqlQuery.Append(" and cm.audit_id='" + _arid + "' ");
+                                    _sqlQuery.Append(" ; ");
+
+
+
+                                    //generic
+                                    _sqlQuery.Append(" SELECT distinct ");
+                                    _sqlQuery.Append(" cm.hardware_info_id,cm.hw_children_main_id, cm.description, cm.product,cm.vendor, cm.serial,cm.units, cm.size , cm.class as type ");
+                                    _sqlQuery.Append(" FROM auditrun_hw_children_main cm ");
+                                    _sqlQuery.Append(" where cm.class = 'generic' ");
+                                    _sqlQuery.Append(" and cm.hardware_info_id='" + _hardwareInfoId + "'  ");
+                                    _sqlQuery.Append(" and cm.audit_id='" + _arid + "' ");
+                                    _sqlQuery.Append(" ; ");
+
+
+                                    //volume
+                                    _sqlQuery.Append(" SELECT distinct ");
+                                    _sqlQuery.Append(" cm.hardware_info_id,cm.hw_children_main_id, cm.description, cm.product,cm.vendor, cm.serial,cm.units, cm.size , cm.class as type ");
+                                    _sqlQuery.Append(" FROM auditrun_hw_children_main cm  ");
+                                    _sqlQuery.Append(" where cm.class = 'volume' ");
+                                    _sqlQuery.Append(" and cm.hardware_info_id='" + _hardwareInfoId + "'  ");
+                                    _sqlQuery.Append(" and cm.audit_id='" + _arid + "' ");
+                                    _sqlQuery.Append(" ; ");
+
+
+                                    //system
+                                    _sqlQuery.Append(" SELECT distinct ");
+                                    _sqlQuery.Append(" cm.hardware_info_id,cm.hw_children_main_id, cm.description, cm.product,cm.vendor, cm.serial,cm.units, cm.size , cm.class as type ");
+                                    _sqlQuery.Append(" FROM auditrun_hw_children_main cm ");
+                                    _sqlQuery.Append(" where cm.class = 'system' ");
+                                    _sqlQuery.Append(" and cm.hardware_info_id='" + _hardwareInfoId + "' ");
+                                    _sqlQuery.Append(" and cm.audit_id='" + _arid + "' ");
+                                    _sqlQuery.Append(" ; ");
+
+                                    (_functionReturn, _dataSet, _sqlconnTime, _queryTime) = _databaseFunctions.ExecuteSelectDataSet(_sqlQuery.ToString(), _methodName, _examShiftGuid, Enumeration.DatabaseSettingType.Audit);
+                                    if (_functionReturn.Status)
+                                    {
+                                        foreach (DataRow _row in _dataSet.Tables[0].Rows)
+                                        {
+                                            string _hardware_info_id = _row["hardware_info_id"] == DBNull.Value ? "" : Convert.ToString(_row["hardware_info_id"]);
+                                            string _system_machine_id = _row["system_id_hash"] == DBNull.Value ? "" : Convert.ToString(_row["system_id_hash"]);
+                                            string _desktop_label_name = _row["desktop_label_name"] == DBNull.Value ? "" : Convert.ToString(_row["desktop_label_name"]);
+                                            string _description = _row["description"] == DBNull.Value ? "" : Convert.ToString(_row["description"]);
+                                            string _product = _row["product"] == DBNull.Value ? "" : Convert.ToString(_row["product"]);
+                                            string _vendor = _row["vendor"] == DBNull.Value ? "" : Convert.ToString(_row["vendor"]);
+                                            string _serial = _row["serial"] == DBNull.Value ? "" : Convert.ToString(_row["serial"]);
+                                            string _aRDateTimeime = _row["date_time"] == DBNull.Value ? "" : Convert.ToString(_row["date_time"]);
+                                            string _operating_system = _row["operating_system"] == DBNull.Value ? "" : Convert.ToString(_row["operating_system"]);
+
+                                            // Insert data into the worksheet
+                                            worksheet.Cell(rowNumber, 1).Value = _hardware_info_id;
+                                            worksheet.Cell(rowNumber, 2).Value = _system_machine_id;
+                                            worksheet.Cell(rowNumber, 3).Value = _desktop_label_name;
+                                            worksheet.Cell(rowNumber, 4).Value = _description;
+                                            worksheet.Cell(rowNumber, 5).Value = _product;
+                                            worksheet.Cell(rowNumber, 6).Value = _vendor;
+                                            worksheet.Cell(rowNumber, 7).Value = _serial;
+                                            worksheet.Cell(rowNumber, 8).Value = _aRDateTimeime;
+                                            worksheet.Cell(rowNumber, 9).Value = _operating_system;
+
+
+                                            //// Process operating system details
+                                            if (string.IsNullOrEmpty(_operating_system) || _operating_system.Contains("not found"))
+                                            {
+                                                _OSType = "Not Found!!";
+                                            }
+                                            else
+                                            {
+                                                try
+                                                {
+                                                    var text = JsonConvert.DeserializeObject(_operating_system);
+                                                    string text2 = JsonConvert.SerializeObject(text);
+                                                    JObject _ostypejson = JObject.Parse(text2);
+                                                    var _OprSType = _ostypejson.Descendants()
+                                                        .Where(t => t.Type == JTokenType.Property && ((JProperty)t).Name == "ProductName")
+                                                        .Select(p => ((JProperty)p).Value)
+                                                        .FirstOrDefault();
+                                                    _OSType = _OprSType?.ToString() ?? "Unknown OS";
+                                                }
+                                                catch
+                                                {
+                                                    _OSType = "Invalid OS Data";
+                                                }
+                                            }
+
+                                            // Fetch all Memory Info rows for this Hardware ID
+                                            var memoryRows = _dataSet.Tables[2].AsEnumerable()
+                                                .Where(r => Convert.ToString(r["hardware_info_id"]) == _hardware_info_id)
+                                                .ToList();
+
+                                            // Fetch CPU Info rows for this Hardware ID
+                                            var cpuRows = _dataSet.Tables[3].AsEnumerable()
+                                                .Where(r => Convert.ToString(r["hardware_info_id"]) == _hardware_info_id)
+                                                .ToList();
+
+                                            // Fetch Display Info rows for this Hardware ID
+                                            var displayRows = _dataSet.Tables[4].AsEnumerable()
+                                                .Where(r => Convert.ToString(r["hardware_info_id"]) == _hardware_info_id)
+                                                .ToList();
+
+                                            // Fetch Input Devices Info rows for this Hardware ID
+                                            var inputDeviceRows = _dataSet.Tables[5].AsEnumerable()
+                                                .Where(r => Convert.ToString(r["hardware_info_id"]) == _hardware_info_id)
+                                                .ToList();
+                                            // Fetch Network Devices Info rows for this Hardware ID
+                                            var networkDeviceRows = _dataSet.Tables[6].AsEnumerable()
+                                                .Where(r => Convert.ToString(r["hardware_info_id"]) == _hardware_info_id)
+                                                .ToList();
+                                            // Fetch MultiMedia Devices Info rows for this Hardware ID
+                                            var multimediaDeviceRows = _dataSet.Tables[7].AsEnumerable()
+                                                .Where(r => Convert.ToString(r["hardware_info_id"]) == _hardware_info_id)
+                                                .ToList();
+
+                                            // Fetch Disk Devices Info rows for this Hardware ID
+                                            var diskDevicesRows = _dataSet.Tables[8].AsEnumerable()
+                                                .Where(r => Convert.ToString(r["hardware_info_id"]) == _hardware_info_id)
+                                                .ToList();
+
+                                            // Fetch Bus Devices Info rows for this Hardware ID
+                                            var busDevicesRows = _dataSet.Tables[9].AsEnumerable()
+                                                .Where(r => Convert.ToString(r["hardware_info_id"]) == _hardware_info_id)
+                                                .ToList();
+
+                                            // Fetch bridge Devices Info rows for this Hardware ID
+                                            var bridgeDevicesRows = _dataSet.Tables[11].AsEnumerable()
+                                                .Where(r => Convert.ToString(r["hardware_info_id"]) == _hardware_info_id)
+                                                .ToList();
+
+                                            // Fetch communication Devices Info rows for this Hardware ID
+                                            var communicationDevicesRows = _dataSet.Tables[12].AsEnumerable()
+                                                .Where(r => Convert.ToString(r["hardware_info_id"]) == _hardware_info_id)
+                                                .ToList();
+
+                                            // Fetch generic Devices Info rows for this Hardware ID
+                                            var genericDevicesRows = _dataSet.Tables[13].AsEnumerable()
+                                                .Where(r => Convert.ToString(r["hardware_info_id"]) == _hardware_info_id)
+                                                .ToList();
+
+                                            // Fetch volume Devices Info rows for this Hardware ID
+                                            var volumeDevicesRows = _dataSet.Tables[14].AsEnumerable()
+                                                .Where(r => Convert.ToString(r["hardware_info_id"]) == _hardware_info_id)
+                                                .ToList();
+
+                                            // Fetch system Devices Info rows for this Hardware ID
+                                            var systemDevicesRows = _dataSet.Tables[15].AsEnumerable()
+                                                .Where(r => Convert.ToString(r["hardware_info_id"]) == _hardware_info_id)
+                                                .ToList();
+
+
+
+
+                                            // Ensuring at least 1 row exists for both memory & CPU to avoid empty records
+                                            int maxRows = Math.Max(1, new[] { memoryRows.Count, cpuRows.Count, displayRows.Count, inputDeviceRows.Count, networkDeviceRows.Count, multimediaDeviceRows.Count, diskDevicesRows.Count, busDevicesRows.Count, bridgeDevicesRows.Count, communicationDevicesRows.Count, genericDevicesRows.Count, volumeDevicesRows.Count, systemDevicesRows.Count }.Max());
+
+                                            for (int i = 0; i < maxRows; i++)
+                                            {
+                                                var memoryRow = i < memoryRows.Count ? memoryRows[i] : null;
+                                                var cpuRow = i < cpuRows.Count ? cpuRows[i] : null;
+                                                var displayRow = i < displayRows.Count ? displayRows[i] : null;
+                                                var inputRow = i < inputDeviceRows.Count ? inputDeviceRows[i] : null;
+                                                var networkRow = i < networkDeviceRows.Count ? networkDeviceRows[i] : null;
+                                                var multimediaRows = i < multimediaDeviceRows.Count ? multimediaDeviceRows[i] : null;
+                                                var diskRows = i < diskDevicesRows.Count ? diskDevicesRows[i] : null;
+                                                var busRows = i < busDevicesRows.Count ? busDevicesRows[i] : null;
+                                                var bridgeRows = i < bridgeDevicesRows.Count ? bridgeDevicesRows[i] : null;
+                                                var communicationRows = i < communicationDevicesRows.Count ? communicationDevicesRows[i] : null;
+                                                var genericRows = i < genericDevicesRows.Count ? genericDevicesRows[i] : null;
+                                                var volumeRows = i < volumeDevicesRows.Count ? volumeDevicesRows[i] : null;
+                                                var systemRows = i < systemDevicesRows.Count ? systemDevicesRows[i] : null;
+
+                                                // Memory Info
+                                                //string _mem_id = memoryRow == null ? "-" : (memoryRow?["id"] == DBNull.Value ? "-" : Convert.ToString(memoryRow["id"]));
+                                                //string _cm_units = memoryRow == null ? "-" : (memoryRow?["cm_units"] == DBNull.Value ? "-" : Convert.ToString(memoryRow["cm_units"]));
+                                                string _total_memory_size = memoryRow == null ? "-" : (memoryRow?["total_memory_size"] == DBNull.Value ? "-" : Convert.ToString(memoryRow["total_memory_size"]));
+                                                string _memoryDescription = memoryRow == null ? "-" : (memoryRow?["description"] == DBNull.Value ? "-" : Convert.ToString(memoryRow["description"]));
+                                                string _memProduct = memoryRow == null ? "-" : (memoryRow?["product"] == DBNull.Value ? "-" : Convert.ToString(memoryRow["product"]));
+                                                string _memVendor = memoryRow == null ? "-" : (memoryRow?["vendor"] == DBNull.Value ? "-" : Convert.ToString(memoryRow["vendor"]));
+                                                string _memSerial = memoryRow == null ? "-" : (memoryRow?["serial"] == DBNull.Value ? "-" : Convert.ToString(memoryRow["serial"]));
+                                                string _memory_size = memoryRow == null ? "-" : (memoryRow?["memory_size"] == DBNull.Value ? "-" : Convert.ToString(memoryRow["memory_size"]));
+                                                // Handle total memory size conversion safely
+                                                _total_memory_size_in_gb = (_total_memory_size != "-" && ulong.TryParse(_total_memory_size, out ulong totalMemory))
+                                                    ? $"{((totalMemory / 1024) / 1024) / 1024} GB"
+                                                    : "-";
+
+                                                // Memory Data
+                                                //worksheet.Cell(rowNumber, 10).Value = _mem_id;
+                                                //worksheet.Cell(rowNumber, 11).Value = _cm_units;
+                                                worksheet.Cell(rowNumber, 10).Value = _total_memory_size_in_gb;
+                                                worksheet.Cell(rowNumber, 11).Value = _memoryDescription;
+                                                worksheet.Cell(rowNumber, 12).Value = _memProduct;
+                                                worksheet.Cell(rowNumber, 13).Value = _memVendor;
+                                                worksheet.Cell(rowNumber, 14).Value = _memSerial;
+                                                worksheet.Cell(rowNumber, 15).Value = _memory_size;
+
+
+                                                // CPU Info
+                                                string _cpu_id = cpuRow == null ? "-" : (cpuRow?["hardware_info_id"] == DBNull.Value ? "-" : Convert.ToString(cpuRow["hardware_info_id"]));
+                                                string _cpu_name = cpuRow == null ? "-" : (cpuRow?["cpu_name"] == DBNull.Value ? "-" : Convert.ToString(cpuRow["cpu_name"]));
+                                                string _cpu_product = cpuRow == null ? "-" : (cpuRow?["product"] == DBNull.Value ? "-" : Convert.ToString(cpuRow["product"]));
+                                                string _cpu_vendor = cpuRow == null ? "-" : (cpuRow?["vendor"] == DBNull.Value ? "-" : Convert.ToString(cpuRow["vendor"]));
+                                                string _cpu_slot = cpuRow == null ? "-" : (cpuRow?["slot"] == DBNull.Value ? "-" : Convert.ToString(cpuRow["slot"]));
+                                                string _cpu_cores = cpuRow == null ? "-" : (cpuRow?["cores"] == DBNull.Value ? "-" : Convert.ToString(cpuRow["cores"]));
+
+                                                // CPU Data
+                                                //worksheet.Cell(rowNumber, 18).Value = _cpu_id;
+                                                //worksheet.Cell(rowNumber, 19).Value = _cpu_name;
+                                                worksheet.Cell(rowNumber, 16).Value = _cpu_product;
+                                                worksheet.Cell(rowNumber, 17).Value = _cpu_vendor;
+                                                worksheet.Cell(rowNumber, 18).Value = _cpu_slot;
+                                                worksheet.Cell(rowNumber, 19).Value = _cpu_cores;
+
+                                                // Display Info
+                                                //string _display_id = displayRow == null ? "-" : (displayRow?["hw_children_main_id"] == DBNull.Value ? "-" : Convert.ToString(displayRow["hw_children_main_id"]));
+                                                //string _display_description = displayRow == null ? "-" : (displayRow?["description"] == DBNull.Value ? "-" : Convert.ToString(displayRow["description"]));
+                                                //string _display_product = displayRow == null ? "-" : (displayRow?["product"] == DBNull.Value ? "-" : Convert.ToString(displayRow["product"]));
+                                                //string _display_vendor = displayRow == null ? "-" : (displayRow?["vendor"] == DBNull.Value ? "-" : Convert.ToString(displayRow["vendor"]));
+
+                                                //// Display
+                                                //worksheet.Cell(rowNumber, 24).Value = _display_id;
+                                                //worksheet.Cell(rowNumber, 25).Value = _display_description;
+                                                //worksheet.Cell(rowNumber, 26).Value = _display_product;
+                                                //worksheet.Cell(rowNumber, 27).Value = _display_vendor;
+
+                                                // Input Devices Info
+                                                //string _input_device_id = inputRow == null ? "-" : (inputRow?["hw_children_main_id"] == DBNull.Value ? "-" : Convert.ToString(inputRow["hw_children_main_id"]));
+                                                string _input_description = inputRow == null ? "-" : (inputRow?["description"] == DBNull.Value ? "-" : Convert.ToString(inputRow["description"]));
+                                                string _input_product = inputRow == null ? "-" : (inputRow?["product"] == DBNull.Value ? "-" : Convert.ToString(inputRow["product"]));
+                                                string _input_vendor = inputRow == null ? "-" : (inputRow?["vendor"] == DBNull.Value ? "-" : Convert.ToString(inputRow["vendor"]));
+                                                string _usb = inputRow == null ? "-" : (inputRow?["usb"] == DBNull.Value ? "-" : Convert.ToString(inputRow["usb"]));
+                                                string _usb_1 = inputRow == null ? "-" : (inputRow?["usb_1"] == DBNull.Value ? "-" : Convert.ToString(inputRow["usb_1"]));
+                                                string _usb_2 = inputRow == null ? "-" : (inputRow?["usb_2"] == DBNull.Value ? "-" : Convert.ToString(inputRow["usb_2"]));
+
+                                                // Input Devices
+                                                //worksheet.Cell(rowNumber, 28).Value = _input_device_id;
+                                                worksheet.Cell(rowNumber, 20).Value = _input_description;
+                                                worksheet.Cell(rowNumber, 21).Value = _input_product;
+                                                worksheet.Cell(rowNumber, 22).Value = _input_vendor;
+                                                worksheet.Cell(rowNumber, 23).Value = _usb;
+                                                worksheet.Cell(rowNumber, 24).Value = _usb_1;
+                                                worksheet.Cell(rowNumber, 25).Value = _usb_2;
+
+                                                // Network Devices Info
+                                                //string _network_device_id = networkRow == null ? "-" : (networkRow?["hw_children_main_id"] == DBNull.Value ? "-" : Convert.ToString(networkRow["hw_children_main_id"]));
+                                                string _network_description = networkRow == null ? "-" : (networkRow?["description"] == DBNull.Value ? "-" : Convert.ToString(networkRow["description"]));
+                                                string _network_product = networkRow == null ? "-" : (networkRow?["product"] == DBNull.Value ? "-" : Convert.ToString(networkRow["product"]));
+                                                string _network_vendor = networkRow == null ? "-" : (networkRow?["vendor"] == DBNull.Value ? "-" : Convert.ToString(networkRow["vendor"]));
+                                                //string _network_serial = networkRow == null ? "-" : (networkRow?["serial"] == DBNull.Value ? "-" : Convert.ToString(networkRow["serial"]));
+                                                //string _network_units = networkRow == null ? "-" : (networkRow?["units"] == DBNull.Value ? "-" : Convert.ToString(networkRow["units"]));
+                                                //string _network_size = networkRow == null ? "-" : (networkRow?["size"] == DBNull.Value ? "-" : Convert.ToString(networkRow["size"]));
+                                                //string _network_capacity = networkRow == null ? "-" : (networkRow?["capacity"] == DBNull.Value ? "-" : Convert.ToString(networkRow["capacity"]));
+                                                string _network_speed = networkRow == null ? "-" : (networkRow?["speed"] == DBNull.Value ? "-" : Convert.ToString(networkRow["speed"]));
+
+                                                // Network
+                                                //worksheet.Cell(rowNumber, 35).Value = _network_device_id;
+                                                worksheet.Cell(rowNumber, 26).Value = _network_description;
+                                                worksheet.Cell(rowNumber, 27).Value = _network_product;
+                                                worksheet.Cell(rowNumber, 28).Value = _network_vendor;
+                                                //worksheet.Cell(rowNumber, 39).Value = _network_serial;
+                                                //worksheet.Cell(rowNumber, 40).Value = _network_units;
+                                                //worksheet.Cell(rowNumber, 41).Value = _network_size;
+                                                //worksheet.Cell(rowNumber, 42).Value = _network_capacity;
+                                                worksheet.Cell(rowNumber, 29).Value = _network_speed;
+
+
+                                                // Multimedia Info
+                                                //string _multimedia_id = multimediaRows == null ? "-" : (multimediaRows?["hw_children_main_id"] == DBNull.Value ? "-" : Convert.ToString(multimediaRows["hw_children_main_id"]));
+                                                string _multimedia_description = multimediaRows == null ? "-" : (multimediaRows?["description"] == DBNull.Value ? "-" : Convert.ToString(multimediaRows["description"]));
+                                                string _multimedia_product = multimediaRows == null ? "-" : (multimediaRows?["product"] == DBNull.Value ? "-" : Convert.ToString(multimediaRows["product"]));
+                                                string _multimedia_vendor = multimediaRows == null ? "-" : (multimediaRows?["vendor"] == DBNull.Value ? "-" : Convert.ToString(multimediaRows["vendor"]));
+
+
+                                                // MultiMedia
+                                                //worksheet.Cell(rowNumber, 44).Value = _multimedia_id;
+                                                worksheet.Cell(rowNumber, 30).Value = _multimedia_description;
+                                                worksheet.Cell(rowNumber, 31).Value = _multimedia_product;
+                                                worksheet.Cell(rowNumber, 32).Value = _multimedia_vendor;
+
+
+                                                // Disk Devices Info
+                                                //string _disk_device_id = diskRows == null ? "-" : (diskRows?["hw_children_main_id"] == DBNull.Value ? "-" : Convert.ToString(diskRows["hw_children_main_id"]));
+                                                string _disk_description = diskRows == null ? "-" : (diskRows?["description"] == DBNull.Value ? "-" : Convert.ToString(diskRows["description"]));
+                                                string _disk_product = diskRows == null ? "-" : (diskRows?["product"] == DBNull.Value ? "-" : Convert.ToString(diskRows["product"]));
+                                                string _disk_vendor = diskRows == null ? "-" : (diskRows?["vendor"] == DBNull.Value ? "-" : Convert.ToString(diskRows["vendor"]));
+                                                string _disk_serial = diskRows == null ? "-" : (diskRows?["serial"] == DBNull.Value ? "-" : Convert.ToString(diskRows["serial"]));
+                                                //string _disk_units = diskRows == null ? "-" : (diskRows?["units"] == DBNull.Value ? "-" : Convert.ToString(diskRows["units"]));
+                                                string _disk_size = diskRows == null ? "-" : (diskRows?["size"] == DBNull.Value ? "-" : Convert.ToString(diskRows["size"]));
+
+                                                // Disk
+                                                //worksheet.Cell(rowNumber, 32).Value = _disk_device_id;
+                                                worksheet.Cell(rowNumber, 33).Value = _disk_description;
+                                                worksheet.Cell(rowNumber, 34).Value = _disk_product;
+                                                worksheet.Cell(rowNumber, 35).Value = _disk_vendor;
+                                                worksheet.Cell(rowNumber, 36).Value = _disk_serial;
+                                                //worksheet.Cell(rowNumber, 37).Value = _disk_units;
+                                                worksheet.Cell(rowNumber, 37).Value = _disk_size;
+
+
+                                                // Bus Devices Info
+                                                //string _bus_device_id = busRows == null ? "-" : (busRows?["hw_children_main_id"] == DBNull.Value ? "-" : Convert.ToString(busRows["hw_children_main_id"]));
+                                                string _bus_description = busRows == null ? "-" : (busRows?["description"] == DBNull.Value ? "-" : Convert.ToString(busRows["description"]));
+                                                string _bus_product = busRows == null ? "-" : (busRows?["product"] == DBNull.Value ? "-" : Convert.ToString(busRows["product"]));
+                                                string _bus_vendor = busRows == null ? "-" : (busRows?["vendor"] == DBNull.Value ? "-" : Convert.ToString(busRows["vendor"]));
+                                                string _bus_serial = busRows == null ? "-" : (busRows?["serial"] == DBNull.Value ? "-" : Convert.ToString(busRows["serial"]));
+                                                //string _bus_units = busRows == null ? "-" : (busRows?["units"] == DBNull.Value ? "-" : Convert.ToString(busRows["units"]));
+                                                //string _disk_size = diskRows == null ? "-" : (diskRows?["size"] == DBNull.Value ? "-" : Convert.ToString(diskRows["size"]));
+
+                                                //Bus
+                                                //worksheet.Cell(rowNumber, 55).Value = _bus_device_id;
+                                                worksheet.Cell(rowNumber, 38).Value = _bus_description;
+                                                worksheet.Cell(rowNumber, 39).Value = _bus_product;
+                                                worksheet.Cell(rowNumber, 40).Value = _bus_vendor;
+                                                worksheet.Cell(rowNumber, 41).Value = _bus_serial;
+                                                //worksheet.Cell(rowNumber, 60).Value = _bus_units;
+                                                //worksheet.Cell(rowNumber, 61).Value = _bus_size;
+
+                                                // Bridge Devices Info
+                                                //string _bridge_device_id = bridgeRows == null ? "-" : (bridgeRows?["hw_children_main_id"] == DBNull.Value ? "-" : Convert.ToString(bridgeRows["hw_children_main_id"]));
+                                                string _bridge_description = bridgeRows == null ? "-" : (bridgeRows?["description"] == DBNull.Value ? "-" : Convert.ToString(bridgeRows["description"]));
+                                                string _bridge_product = bridgeRows == null ? "-" : (bridgeRows?["product"] == DBNull.Value ? "-" : Convert.ToString(bridgeRows["product"]));
+                                                string _bridge_vendor = bridgeRows == null ? "-" : (bridgeRows?["vendor"] == DBNull.Value ? "-" : Convert.ToString(bridgeRows["vendor"]));
+                                                string _bridge_serial = bridgeRows == null ? "-" : (bridgeRows?["serial"] == DBNull.Value ? "-" : Convert.ToString(bridgeRows["serial"]));
+                                                //string _bridge_units = bridgeRows == null ? "-" : (bridgeRows?["units"] == DBNull.Value ? "-" : Convert.ToString(bridgeRows["units"]));
+
+                                                // Bridge
+                                                //worksheet.Cell(rowNumber, 62).Value = _bridge_device_id;
+                                                worksheet.Cell(rowNumber, 42).Value = _bridge_description;
+                                                worksheet.Cell(rowNumber, 43).Value = _bridge_product;
+                                                worksheet.Cell(rowNumber, 44).Value = _bridge_vendor;
+                                                worksheet.Cell(rowNumber, 45).Value = _bridge_serial;
+                                                //worksheet.Cell(rowNumber, 67).Value = _bridge_units;
+
+
+                                                // Communication Devices Info
+                                                //string _communication_device_id = communicationRows == null ? "-" : (communicationRows?["hw_children_main_id"] == DBNull.Value ? "-" : Convert.ToString(communicationRows["hw_children_main_id"]));
+                                                string _communication_description = communicationRows == null ? "-" : (communicationRows?["description"] == DBNull.Value ? "-" : Convert.ToString(communicationRows["description"]));
+                                                string _communication_product = communicationRows == null ? "-" : (communicationRows?["product"] == DBNull.Value ? "-" : Convert.ToString(communicationRows["product"]));
+                                                string _communication_vendor = communicationRows == null ? "-" : (communicationRows?["vendor"] == DBNull.Value ? "-" : Convert.ToString(communicationRows["vendor"]));
+                                                string _communication_serial = communicationRows == null ? "-" : (communicationRows?["serial"] == DBNull.Value ? "-" : Convert.ToString(communicationRows["serial"]));
+                                                //string _communication_units = communicationRows == null ? "-" : (communicationRows?["units"] == DBNull.Value ? "-" : Convert.ToString(communicationRows["units"]));
+
+                                                // Communication
+                                                //worksheet.Cell(rowNumber, 68).Value = _communication_device_id;
+                                                worksheet.Cell(rowNumber, 46).Value = _communication_description;
+                                                worksheet.Cell(rowNumber, 47).Value = _communication_product;
+                                                worksheet.Cell(rowNumber, 48).Value = _communication_vendor;
+                                                worksheet.Cell(rowNumber, 49).Value = _communication_serial;
+                                                //worksheet.Cell(rowNumber, 73).Value = _communication_units;
+
+
+                                                // Generic Devices Info
+                                                //string _generic_device_id = genericRows == null ? "-" : (genericRows?["hw_children_main_id"] == DBNull.Value ? "-" : Convert.ToString(genericRows["hw_children_main_id"]));
+                                                string _generic_description = genericRows == null ? "-" : (genericRows?["description"] == DBNull.Value ? "-" : Convert.ToString(genericRows["description"]));
+                                                string _generic_product = genericRows == null ? "-" : (genericRows?["product"] == DBNull.Value ? "-" : Convert.ToString(genericRows["product"]));
+                                                string _generic_vendor = genericRows == null ? "-" : (genericRows?["vendor"] == DBNull.Value ? "-" : Convert.ToString(genericRows["vendor"]));
+                                                string _generic_serial = genericRows == null ? "-" : (genericRows?["serial"] == DBNull.Value ? "-" : Convert.ToString(genericRows["serial"]));
+                                                //string _generic_units = genericRows == null ? "-" : (genericRows?["units"] == DBNull.Value ? "-" : Convert.ToString(genericRows["units"]));
+
+                                                // Generic 
+                                                //worksheet.Cell(rowNumber, 74).Value = _generic_device_id;
+                                                worksheet.Cell(rowNumber, 50).Value = _generic_description;
+                                                worksheet.Cell(rowNumber, 51).Value = _generic_product;
+                                                worksheet.Cell(rowNumber, 52).Value = _generic_vendor;
+                                                worksheet.Cell(rowNumber, 53).Value = _generic_serial;
+                                                //worksheet.Cell(rowNumber, 79).Value = _generic_units;
+
+                                                // Volume Devices Info
+                                                //string _volume_device_id = volumeRows == null ? "-" : (volumeRows?["hw_children_main_id"] == DBNull.Value ? "-" : Convert.ToString(volumeRows["hw_children_main_id"]));
+                                                string _volume_description = volumeRows == null ? "-" : (volumeRows?["description"] == DBNull.Value ? "-" : Convert.ToString(volumeRows["description"]));
+                                                string _volume_product = volumeRows == null ? "-" : (volumeRows?["product"] == DBNull.Value ? "-" : Convert.ToString(volumeRows["product"]));
+                                                string _volume_vendor = volumeRows == null ? "-" : (volumeRows?["vendor"] == DBNull.Value ? "-" : Convert.ToString(volumeRows["vendor"]));
+                                                string _volume_serial = volumeRows == null ? "-" : (volumeRows?["serial"] == DBNull.Value ? "-" : Convert.ToString(volumeRows["serial"]));
+                                                //string _volume_units = volumeRows == null ? "-" : (volumeRows?["units"] == DBNull.Value ? "-" : Convert.ToString(volumeRows["units"]));
+
+                                                // Volume
+                                                //worksheet.Cell(rowNumber, 80).Value = _volume_device_id;
+                                                worksheet.Cell(rowNumber, 54).Value = _volume_description;
+                                                worksheet.Cell(rowNumber, 55).Value = _volume_product;
+                                                worksheet.Cell(rowNumber, 56).Value = _volume_vendor;
+                                                worksheet.Cell(rowNumber, 57).Value = _volume_serial;
+                                                //worksheet.Cell(rowNumber, 85).Value = _volume_units;
+
+                                                // System Devices Info
+                                                //string _system_device_id = systemRows == null ? "-" : (systemRows?["hw_children_main_id"] == DBNull.Value ? "-" : Convert.ToString(systemRows["hw_children_main_id"]));
+                                                string _system_description = systemRows == null ? "-" : (systemRows?["description"] == DBNull.Value ? "-" : Convert.ToString(systemRows["description"]));
+                                                string _system_product = systemRows == null ? "-" : (systemRows?["product"] == DBNull.Value ? "-" : Convert.ToString(systemRows["product"]));
+                                                string _system_vendor = systemRows == null ? "-" : (systemRows?["vendor"] == DBNull.Value ? "-" : Convert.ToString(systemRows["vendor"]));
+                                                string _system_serial = systemRows == null ? "-" : (systemRows?["serial"] == DBNull.Value ? "-" : Convert.ToString(systemRows["serial"]));
+                                                //string _system_units = systemRows == null ? "-" : (systemRows?["units"] == DBNull.Value ? "-" : Convert.ToString(systemRows["units"]));
+
+                                                // System
+                                                //worksheet.Cell(rowNumber, 86).Value = _system_device_id;
+                                                worksheet.Cell(rowNumber, 58).Value = _system_description;
+                                                worksheet.Cell(rowNumber, 59).Value = _system_product;
+                                                worksheet.Cell(rowNumber, 60).Value = _system_vendor;
+                                                worksheet.Cell(rowNumber, 61).Value = _system_serial;
+                                                //worksheet.Cell(rowNumber, 91).Value = _system_units;
+
+
+
+
+                                                rowNumber++; // Move to the next row
+                                            }
+                                            // Auto-adjust column width
+                                            worksheet.Columns().AdjustToContents();
+                                        }
+                                    }
+                                    //// Get the local Downloads folder path
+                                    //string downloadsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+                                    //string filePath = Path.Combine(downloadsPath, "AuditReport1432.xlsx");
+                                    //// Save the workbook
+                                    //workbook.SaveAs(filePath);
+                                    //Console.WriteLine($"Audit Report saved to {filePath}");
+                                }
+                            }
+                        }
+                    }
+                    _auditLog.Message = ApplicationConstants.GenericMessages.GetExamShiftsInfoEnded;
+                    CommonFunctions.Log(Enumeration.LogLevel.Information, _loggerFunctions, _auditLog);
+                }
+                catch (Exception ex)
+                {
+                    //ERROR
+                    _jsonReturn = string.Empty;
+                    _functionReturn = CommonFunctions.SystemError(ex.Message, _methodName);
+                }
+            }
+            using (stream = new MemoryStream())
+            {
+                workbook.SaveAs(stream); // Save workbook to memory stream
+                stream.Position = 0; // Reset stream position for reading
+                // Convert to Base64
+                string base64String = Convert.ToBase64String(stream.ToArray());
+
+                // Save Base64 to JSON
+                var jsonObject = new { FileData = base64String };
+                _jsonReturn = JsonConvert.SerializeObject(jsonObject, Formatting.Indented);
+            }
+
+            return (_jsonReturn, _functionReturn);
+        }
